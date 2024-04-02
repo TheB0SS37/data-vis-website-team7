@@ -55,6 +55,7 @@
       const sumOfRecordsLost = sumTheRecords(data);
       const binnedByYear = R.groupBy(R.prop("year"), data);
       const treeMapData = makeNode(`${sumOfRecordsLost} Total Records lost`);
+      treeMapData.value = sumOfRecordsLost;
       for (const [key, value] of Object.entries(binnedByYear)) {
         const newNode = makeNode(key);
         newNode.value = sumTheRecords(value);
@@ -152,7 +153,11 @@
 
         nodeEnter
           .append("circle")
-          .attr("r", 2.5)
+          .attr("r", (d) => {
+            console.log(d.data.value); // this is just to get the value
+            // do stuff here
+            return 2.5; // return radius size here
+          })
           .attr("fill", (d) => (d._children ? "#555" : "#999"))
           .attr("stroke-width", 10);
 
