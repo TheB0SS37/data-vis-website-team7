@@ -30,7 +30,11 @@
         return { name: name, children: [] };
       };
       import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-      const sourceURL = `${window.location.origin}/data/EDA-dataset.csv`;
+      const sourceDomain = window.location.origin;
+      const sourceURL =
+        sourceDomain.slice(5) === "https"
+          ? `${sourceDomain}/data-vis-website-team7/data/EDA-dataset.csv`
+          : `${sourceDomain}/data/EDA-dataset.csv`;
       let csvData = await $.ajax({ url: sourceURL, method: "GET" });
       let data = d3.csvParse(csvData);
       const treeMapData = makeNode("root");
