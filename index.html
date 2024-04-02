@@ -26,9 +26,24 @@
     <div id="container"></div>
     <script type="module">
       // D3 Test
+      const makeNode = (name) => {
+        return { name: name, children: [] };
+      };
+      import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
       const sourceURL = `${window.location.origin}/data/EDA-dataset.csv`;
-      const data = await $.ajax({ url: sourceURL, method: "GET" });
-      console.log(data);
+      let csvData = await $.ajax({ url: sourceURL, method: "GET" });
+      let data = d3.csvParse(csvData);
+      const treeMapData = makeNode("root");
+      console.log(treeMapData);
+      data = data.map((row) => {
+        row["records lost"] = parseInt(row["records lost"].replace(/,/g, ""));
+        return row;
+      });
+
+      const sumOfRecordsLost = data.reduce(
+        (sum, row) => sum + row["records lost"],
+        0
+      );
     </script>
   </body>
 </html>
