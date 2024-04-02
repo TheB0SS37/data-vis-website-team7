@@ -1,28 +1,4 @@
-organisation,alternative name,records lost,year   ,date,story,sector,method,interesting story,data sensitivity,displayed records,,source name,1st source link,2nd source link,ID
-"visualisation here: https://informationisbeautiful.net/visualizations/worlds-biggest-data-breaches-hacks/
-pink = new",,"(use 3m, 4m, 5m or 10m to approximate unknown figures) ",year story broke,,,"web
-healthcare
-app
-retail
-gaming
-transport
-financial
-tech
-government
-telecoms
-legal
-media
-academic
-energy
-military","poor security
-hacked
-oops!
-lost device 
-inside job",,"1. Just email address/Online information 
-2 SSN/Personal details 
-3 Credit card information 
-4 Health & other personal records 
-5 Full details","=IF(C3>100000000,C3,"")",,,,,
+organisation,alternative name,records lost,year,date,story,sector,method,interesting story,data sensitivity,displayed records,,source name,1st source link,2nd source link,ID
 Plex,,"15,000,000",2022,Aug 2022,"Intruders access password data, usernames, and emails for at least half of its 30 million users.",web ,hacked,,1,,,Ars technica,https://arstechnica.com/information-technology/2022/08/plex-imposes-password-reset-after-hackers-steal-data-for-15-million-users/,,418
 Twitter,,"5,400,000",2021,Dec 2021,"Zero day vulnerability allowed a threat actor to create profiles of 5.4 million Twitter users inc. a verified phone number or email address, and scraped public information, such as follower counts, screen name, login name, etc",web,hacked,,2,,,Bleeping Computer,https://www.bleepingcomputer.com/news/security/twitter-confirms-zero-day-used-to-expose-data-of-54-million-accounts/,,419
 Shanghai Police,,"500,000,000",2022,Jul 2022,"A database containing records of over a billion Chinese civilians – allegedly stolen from the Shanghai Police. Addresses, police records and national ID numbers. Potentially one of the largest data breaches in history. Details repressed and censored by Chinese media.",financial,hacked,,5,"""one billion""",,The Register,https://www.theregister.com/2022/07/05/shanghai_police_database_for_sell/,,420
