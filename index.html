@@ -49,16 +49,34 @@
         row["year"] = parseInt(row["year"]);
         row["data sensitivity"] = parseInt(row["data sensitivity"]);
         row["ID"] = parseInt(row["ID"]);
+        row["sector"] = row["sector"].trim();
         return row;
       });
 
+      const dataMin = Math.min(...data.map((row) => row["records lost"]));
+
       const sumOfRecordsLost = sumTheRecords(data);
+      const dataMax = sumOfRecordsLost;
+
       const binnedByYear = R.groupBy(R.prop("year"), data);
       const treeMapData = makeNode(`${sumOfRecordsLost} Total Records lost`);
       treeMapData.value = sumOfRecordsLost;
       for (const [key, value] of Object.entries(binnedByYear)) {
         const newNode = makeNode(key);
         newNode.value = sumTheRecords(value);
+        const binnedBySector = R.groupBy(R.prop("sector"), value);
+
+        for (const [sectorKey, value] of Object.entries(binnedBySector)) {
+          const sectorNode = makeNode(sectorKey);
+          sectorNode.value = sumTheRecords(value);
+          value.map((org) => {
+            const orgNode = makeNode(org.organisation);
+            orgNode.value = org["records lost"];
+            sectorNode.children.push(orgNode);
+          });
+          newNode.children.push(sectorNode);
+        }
+
         treeMapData.children.push(newNode);
       }
 
@@ -76,7 +94,7 @@
       // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
       // “bottom”, in the data domain. The width of a column is based on the tree’s height.
       const root = d3.hierarchy(data);
-      const dx = 10;
+      const dx = 40;
       const dy = (width - marginRight - marginLeft) / (1 + root.height);
 
       // Define the tree layout and the shape for links.
@@ -153,11 +171,12 @@
 
         nodeEnter
           .append("circle")
-          .attr("r", (d) => {
-            console.log(d.data.value); // this is just to get the value
-            // do stuff here
-            return 2.5; // return radius size here
-          })
+          .attr(
+            "r",
+            (d) =>
+              ((d.data.value - dataMin) / (dataMax - dataMin)) * (100 - 2.5) +
+              2.5
+          )
           .attr("fill", (d) => (d._children ? "#555" : "#999"))
           .attr("stroke-width", 10);
 
