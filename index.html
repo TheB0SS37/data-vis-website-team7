@@ -114,7 +114,7 @@
 
     <!------------ JS  ------------>
     <script type="module">
-      // D3 Test
+      // D3 Vis
       const makeNode = (name) => {
         return { name: name, children: [] };
       };
@@ -123,6 +123,16 @@
         return data.reduce((sum, row) => sum + row["records lost"], 0);
       };
 
+      const normalizeScale = (
+        valueToScale,
+        datasetMin,
+        datasetMax,
+        newMax,
+        newMin
+      ) =>
+        ((valueToScale - datasetMin) / (datasetMax - datasetMin)) *
+          (newMax - newMin) +
+        newMin;
       import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
       const sourceDomain = window.location.origin;
       const sourceURL =
@@ -149,9 +159,11 @@
       const binnedByYear = R.groupBy(R.prop("year"), data);
       const treeMapData = makeNode(`${sumOfRecordsLost} Total Records lost`);
       treeMapData.value = sumOfRecordsLost;
+
       for (const [key, value] of Object.entries(binnedByYear)) {
         const newNode = makeNode(key);
         newNode.value = sumTheRecords(value);
+
         const binnedBySector = R.groupBy(R.prop("sector"), value);
 
         for (const [sectorKey, value] of Object.entries(binnedBySector)) {
@@ -206,9 +218,8 @@
       const gLink = svg
         .append("g")
         .attr("fill", "none")
-        .attr("stroke", "#555")
-        .attr("stroke-opacity", 0.4)
-        .attr("stroke-width", 1.5);
+        .attr("stroke", "#212529")
+        .attr("stroke-width", 1);
 
       const gNode = svg
         .append("g")
@@ -259,11 +270,8 @@
 
         nodeEnter
           .append("circle")
-          .attr(
-            "r",
-            (d) =>
-              ((d.data.value - dataMin) / (dataMax - dataMin)) * (100 - 2.5) +
-              2.5
+          .attr("r", (d) =>
+            normalizeScale(d.data.value, dataMin, dataMax, 100, 2.5)
           )
           .attr("fill", (d) => (d._children ? "#555" : "#999"))
           .attr("stroke-width", 10);
