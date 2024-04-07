@@ -123,6 +123,11 @@
         return data.reduce((sum, row) => sum + row["records lost"], 0);
       };
 
+      const selectColor = (number) => {
+        const hue = number * 137.508;
+        return `hsl(${hue},50%,75%)`;
+      };
+
       const normalizeScale = (
         valueToScale,
         datasetMin,
@@ -147,10 +152,24 @@
         row["year"] = parseInt(row["year"]);
         row["data sensitivity"] = parseInt(row["data sensitivity"]);
         row["ID"] = parseInt(row["ID"]);
-        row["sector"] = row["sector"].trim();
+        row["sector"] = row["sector"]
+          .trim()
+          .split(", ")
+          .sort()
+          .join(", ")
+          .trim();
         return row;
       });
 
+      const sectorSet = new Set();
+      data.map((row) => {
+        sectorSet.add(row["sector"]);
+      });
+      const sectorColorPallette = {};
+      [...sectorSet].map((sec, i) => {
+        sectorColorPallette[sec] = selectColor(i * 2);
+      });
+      console.log(sectorColorPallette);
       const dataMin = Math.min(...data.map((row) => row["records lost"]));
 
       const sumOfRecordsLost = sumTheRecords(data);
@@ -184,7 +203,7 @@
       /////////////////////////////////////////////////////////////////////////////////////////
       // Specify the charts’ dimensions. The height is variable, depending on the layout.
       data = treeMapData;
-      const width = 928;
+      const width = 1200;
       const marginTop = 10;
       const marginRight = 10;
       const marginBottom = 10;
@@ -212,8 +231,9 @@
         .attr("viewBox", [-marginLeft, -marginTop, width, dx])
         .attr(
           "style",
-          "max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;"
+          "max-width: 100%; height: auto; font: 10px sans-serif; user-select: none; border: 2px solid black;"
         );
+      svg.style("background-color", "#d8ecf3");
 
       const gLink = svg
         .append("g")
@@ -273,15 +293,24 @@
           .attr("r", (d) =>
             normalizeScale(d.data.value, dataMin, dataMax, 100, 2.5)
           )
-          .attr("fill", (d) => (d._children ? "#555" : "#999"))
-          .attr("stroke-width", 10);
+          .attr(
+            "fill",
+            (d) =>
+              sectorColorPallette[d.data.name] ||
+              sectorColorPallette[d?.parent?.data?.name] ||
+              "#555"
+          )
+          .style("stroke", "black")
+          .style("stroke-width", "1px");
 
         nodeEnter
           .append("text")
           .attr("dy", "0.31em")
           .attr("x", (d) => (d._children ? -6 : 6))
           .attr("text-anchor", (d) => (d._children ? "end" : "start"))
-          .text((d) => d.data.name)
+          .text((d) =>
+            d._children ? d.data.name : d.data.name.concat(` | ${d.data.value}`)
+          )
           .attr("stroke-linejoin", "round")
           .attr("stroke-width", 3)
           .attr("stroke", "white")
