@@ -50,14 +50,14 @@
       id="hierarchy-vis-title"
       class="container d-flex flex-row justify-content-center"
     >
-      <div class="display-3">Hierarchy Visualization</div>
+      <div class="display-3 p-3">Hierarchy Visualization</div>
     </div>
     <div id="container" class="d-flex flex-row justify-content-center"></div>
     <div
       id="tableau-vis-title"
       class="container d-flex flex-row justify-content-center"
     >
-      <div class="display-3">Tableau Visualization</div>
+      <div class="display-3 p-3">Tableau Visualization</div>
     </div>
     <!-- Tableau Vis Embed -->
     <div class="container d-flex flex-row justify-content-center">
@@ -114,20 +114,26 @@
 
     <!------------ JS  ------------>
     <script type="module">
-      // D3 Vis
+      // D3 Vis /////////////////////////
+
+      // Create node data structure. Children contains other nodes
       const makeNode = (name) => {
         return { name: name, children: [] };
       };
 
+      // Receives an array of row objects and returns the sum of records lost
       const sumTheRecords = (data = []) => {
         return data.reduce((sum, row) => sum + row["records lost"], 0);
       };
 
+      // Creates a unique color based on an index approximation of golden angle
       const selectColor = (number) => {
         const hue = number * 137.508;
         return `hsl(${hue},50%,75%)`;
       };
 
+      // Takes a value, the max and min of its dataset,
+      // then returns a scaled version based on a new max ands min value
       const normalizeScale = (
         valueToScale,
         datasetMin,
@@ -138,7 +144,11 @@
         ((valueToScale - datasetMin) / (datasetMax - datasetMin)) *
           (newMax - newMin) +
         newMin;
+
       import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+      // Receive dataset from either local or online location
+      // depending if app is deployed
       const sourceDomain = window.location.origin;
       const sourceURL =
         sourceDomain.slice(0, 5) === "https"
@@ -147,12 +157,13 @@
       let csvData = await $.ajax({ url: sourceURL, method: "GET" });
       let data = d3.csvParse(csvData);
 
+      // Clean the dataset
       data = data.map((row) => {
-        row["records lost"] = parseInt(row["records lost"].replace(/,/g, ""));
-        row["year"] = parseInt(row["year"]);
-        row["data sensitivity"] = parseInt(row["data sensitivity"]);
-        row["ID"] = parseInt(row["ID"]);
-        row["sector"] = row["sector"]
+        row["records lost"] = parseInt(row["records lost"].replace(/,/g, "")); // formatted string to int
+        row["year"] = parseInt(row["year"]); // string to int
+        row["data sensitivity"] = parseInt(row["data sensitivity"]); // string to int
+        row["ID"] = parseInt(row["ID"]); // string to int
+        row["sector"] = row["sector"] // normalize all sectors
           .trim()
           .split(", ")
           .sort()
@@ -161,47 +172,62 @@
         return row;
       });
 
+      // Create a unique color pallette for the sectors
       const sectorSet = new Set();
       data.map((row) => {
         sectorSet.add(row["sector"]);
       });
+
       const sectorColorPallette = {};
       [...sectorSet].map((sec, i) => {
         sectorColorPallette[sec] = selectColor(i * 2);
       });
-      console.log(sectorColorPallette);
-      const dataMin = Math.min(...data.map((row) => row["records lost"]));
 
+      // Grab dataset min and max to parse radius later
+      const dataMin = Math.min(...data.map((row) => row["records lost"]));
       const sumOfRecordsLost = sumTheRecords(data);
       const dataMax = sumOfRecordsLost;
 
-      const binnedByYear = R.groupBy(R.prop("year"), data);
+      // Create root node
       const treeMapData = makeNode(`${sumOfRecordsLost} Total Records lost`);
+
+      // Bin values by the year, the record sum in root
+      const binnedByYear = R.groupBy(R.prop("year"), data);
       treeMapData.value = sumOfRecordsLost;
 
+      // Create rest of tree
       for (const [key, value] of Object.entries(binnedByYear)) {
+        // Make node for each year, then record sum of the rest of the values
         const newNode = makeNode(key);
         newNode.value = sumTheRecords(value);
 
+        // Bin children rows of year by sector
         const binnedBySector = R.groupBy(R.prop("sector"), value);
 
         for (const [sectorKey, value] of Object.entries(binnedBySector)) {
+          // Create sector node and sum its children
           const sectorNode = makeNode(sectorKey);
           sectorNode.value = sumTheRecords(value);
+
+          // Grab individual organisations, make a node, then add them to the sector's children
           value.map((org) => {
             const orgNode = makeNode(org.organisation);
             orgNode.value = org["records lost"];
             sectorNode.children.push(orgNode);
           });
+
+          // Add sector to yearNode children
           newNode.children.push(sectorNode);
         }
 
+        // Add year node to root children
         treeMapData.children.push(newNode);
       }
 
       /////////////////////////////////////////////////////////////////////////////////////////
+      //                                  D3 Charting                                        //
       /////////////////////////////////////////////////////////////////////////////////////////
-      // Specify the charts’ dimensions. The height is variable, depending on the layout.
+      // Chart dimensions
       data = treeMapData;
       const width = 1200;
       const marginTop = 10;
@@ -209,12 +235,9 @@
       const marginBottom = 10;
       const marginLeft = 300;
 
-      // Rows are separated by dx pixels, columns by dy pixels. These names can be counter-intuitive
-      // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
-      // “bottom”, in the data domain. The width of a column is based on the tree’s height.
       const root = d3.hierarchy(data);
-      const dx = 40;
-      const dy = (width - marginRight - marginLeft) / (1 + root.height);
+      const dx = 40; // height
+      const dy = (width - marginRight - marginLeft) / (1 + root.height); // width
 
       // Define the tree layout and the shape for links.
       const tree = d3.tree().nodeSize([dx, dy]);
@@ -223,7 +246,7 @@
         .x((d) => d.y)
         .y((d) => d.x);
 
-      // Create the SVG container, a layer for the links and a layer for the nodes.
+      // Create SVG
       const svg = d3
         .create("svg")
         .attr("width", width)
@@ -247,7 +270,7 @@
         .attr("pointer-events", "all");
 
       function update(event, source) {
-        const duration = event?.altKey ? 2500 : 250; // hold the alt key to slow down the transition
+        const duration = 250;
         const nodes = root.descendants().reverse();
         const links = root.links();
 
@@ -273,7 +296,7 @@
             window.ResizeObserver ? null : () => () => svg.dispatch("toggle")
           );
 
-        // Update the nodes…
+        // Update nodes
         const node = gNode.selectAll("g").data(nodes, (d) => d.id);
 
         // Enter any new nodes at the parent's previous position.
@@ -333,7 +356,7 @@
           .attr("fill-opacity", 0)
           .attr("stroke-opacity", 0);
 
-        // Update the links…
+        // Update links
         const link = gLink.selectAll("path").data(links, (d) => d.target.id);
 
         // Enter any new links at the parent's previous position.
@@ -365,14 +388,13 @@
         });
       }
 
-      // Do the first update to the initial configuration of the tree — where a number of nodes
-      // are open (arbitrarily selected as the root, plus nodes with 7 letters).
+      // Open First Node
       root.x0 = dy / 2;
       root.y0 = 0;
       root.descendants().forEach((d, i) => {
         d.id = i;
         d._children = d.children;
-        if (d.depth && d.data.name.length !== 7) d.children = null;
+        if (d.depth) d.children = null;
       });
 
       update(null, root);
