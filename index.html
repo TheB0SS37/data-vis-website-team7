@@ -211,6 +211,7 @@
           value.map((org) => {
             const orgNode = makeNode(org.organisation);
             orgNode.value = org["records lost"];
+            orgNode.story = org["story"];
             sectorNode.children.push(orgNode);
           });
 
@@ -297,6 +298,20 @@
         // Update nodes
         const node = gNode.selectAll("g").data(nodes, (d) => d.id);
 
+        var div = d3
+          .select("body")
+          .append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+        function getOffset(el) {
+          const rect = el.getBoundingClientRect();
+          return {
+            left: rect.left + window.scrollX,
+            top: rect.top + window.scrollY,
+          };
+        }
+
         // Enter any new nodes at the parent's previous position.
         const nodeEnter = node
           .enter()
@@ -315,6 +330,19 @@
               d.children = d.children ? null : d._children;
               update(event, d);
             }
+          })
+          .on("mouseover", function (event, d) {
+            if (d.depth === 3) {
+              div.transition().duration(500).style("opacity", 1);
+              div
+                .html("<p>" + d.data.story + "</p>")
+                .style("left", getOffset(this).left + 40 + "px")
+                .style("top", getOffset(this).top + 40 + "px")
+                .style("background-color", "white");
+            }
+          })
+          .on("mouseout", (d) => {
+            div.transition().duration(500).style("opacity", 0);
           });
 
         nodeEnter
