@@ -305,8 +305,16 @@
           .attr("fill-opacity", 0)
           .attr("stroke-opacity", 0)
           .on("click", (event, d) => {
-            d.children = d.children ? null : d._children;
-            update(event, d);
+            // Never close root
+            if (d.parent) {
+              const parent = d.parent;
+              // Close all other nodes of parent except for self
+              R.tail(parent.descendants()).forEach((child) =>
+                child.id !== d.id ? (child.children = null) : null
+              );
+              d.children = d.children ? null : d._children;
+              update(event, d);
+            }
           });
 
         nodeEnter
