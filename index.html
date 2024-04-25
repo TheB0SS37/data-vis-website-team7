@@ -31,7 +31,7 @@
         <div class="bg-dark">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link text-white" href="#">Hierarchy</a>
+              <a class="nav-link text-white" href="#">Elision</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="#tableau-vis-title"
@@ -48,7 +48,7 @@
       id="hierarchy-vis-title"
       class="container d-flex flex-row justify-content-center"
     >
-      <div class="display-3 p-3">Hierarchy Visualization</div>
+      <div class="display-3 p-3">Elision Visualization</div>
     </div>
     <div id="container" class="d-flex flex-row justify-content-center"></div>
     <div
@@ -181,13 +181,17 @@
         sectorColorPallette[sec] = selectColor(i * 2);
       });
 
+      const formatter = new Intl.NumberFormat("en-US", { notation: "compact" });
+
       // Grab dataset min and max to parse radius later
       const dataMin = Math.min(...data.map((row) => row["records lost"]));
       const sumOfRecordsLost = sumTheRecords(data);
       const dataMax = sumOfRecordsLost;
 
       // Create root node
-      const treeMapData = makeNode(`${sumOfRecordsLost} Total Records lost`);
+      const treeMapData = makeNode(
+        `${formatter.format(sumOfRecordsLost)} Total Records lost`
+      );
 
       // Bin values by the year, the record sum in root
       const binnedByYear = R.groupBy(R.prop("year"), data);
@@ -322,20 +326,58 @@
           .on("click", (event, d) => {
             // Never close root
             if (d.parent) {
-              const parent = d.parent;
-              // Close all other nodes of parent except for self
-              R.tail(parent.descendants()).forEach((child) =>
-                child.id !== d.id ? (child.children = null) : null
-              );
-              d.children = d.children ? null : d._children;
-              update(event, d);
+              if (d._children) {
+                const parent = d.parent;
+                // Close all other nodes of parent except for self
+                R.tail(parent.descendants()).forEach((child) =>
+                  child.id !== d.id ? (child.children = null) : null
+                );
+                d.children = d.children ? null : d._children;
+                update(event, d);
+              } else if (d.data.story) {
+                let storyModal = document.getElementById("storyModal");
+
+                if (!storyModal) {
+                  const modalContent = `<div class="modal fade" id="storyModal" tabindex="-1" aria-labelledby="storyModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">${d.data.name} - ${d.data.value} records affected</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ${d.data.story}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                  document.body.insertAdjacentHTML("beforeend", modalContent);
+
+                  storyModal = new bootstrap.Modal(
+                    document.getElementById("storyModal")
+                  );
+                  storyModal.show();
+                } else {
+                  const modalTitle = storyModal.querySelector(".modal-title");
+                  const modalBody = storyModal.querySelector(".modal-body");
+
+                  modalTitle.innerText = `${d.data.name} - ${formatter.format(
+                    d.data.value
+                  )} records affected`;
+                  modalBody.innerText = d.data.story;
+
+                  const modalInstance = bootstrap.Modal.getInstance(storyModal);
+                  modalInstance.show();
+                }
+              }
             }
           })
           .on("mouseover", function (event, d) {
-            if (d.depth === 3) {
+            if (!d._children) {
               div.transition().duration(500).style("opacity", 1);
               div
-                .html("<p>" + d.data.story + "</p>")
+                .html("<h6>Click to read story</h6>")
                 .style("left", getOffset(this).left + 40 + "px")
                 .style("top", getOffset(this).top + 40 + "px")
                 .style("background-color", "white");
@@ -363,10 +405,12 @@
         nodeEnter
           .append("text")
           .attr("dy", "0.31em")
-          .attr("x", (d) => (d._children ? -6 : 6))
+          .attr("x", (d) => (d.depth == 0 ? 31 : d._children ? -6 : 6))
           .attr("text-anchor", (d) => (d._children ? "end" : "start"))
           .text((d) =>
-            d._children ? d.data.name : d.data.name.concat(` | ${d.data.value}`)
+            d._children
+              ? d.data.name
+              : d.data.name.concat(` | ${formatter.format(d.data.value)}`)
           )
           .attr("stroke-linejoin", "round")
           .attr("stroke-width", 3)
