@@ -165,8 +165,8 @@
       const sourceDomain = window.location.origin;
       const sourceURL =
         sourceDomain.slice(0, 5) === "https"
-          ? `${sourceDomain}/data-vis-website-team7/data/dataset_v2.csv`
-          : `${sourceDomain}/data/dataset_v2.csv`;
+          ? `${sourceDomain}/data-vis-website-team7/data/dataset_v3.csv`
+          : `${sourceDomain}/data/dataset_v3.csv`;
       let csvData = await $.ajax({ url: sourceURL, method: "GET" });
       let myData = d3.csvParse(csvData);
 
