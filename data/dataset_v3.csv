@@ -1,9 +1,4 @@
 organisation,records lost,Date,Year,story,sector,method,data sensitivity,1st source link
-,,,,,,,"1. Just email address/Online information 
-2. SSN/Personal details 
-3. Credit card information 
-4. Health & other personal records 
-5. Full details",
 21stCentury Oncology,2200000,2015,October,"""Investigators say an ""unauthorized third party"" accessed about 2.2 million patient records in October 2015. The computer files included names, Social Security numbers, information about diagnoses and treatment, and insurance documents.""",health,hacked,4,https://www.news-press.com/story/news/2018/02/06/21st-century-oncology-patients-want-class-action-data-breach-lawsuit-continue/300509002/
 500px,14800000,2019,February ,"A July 2018 hack exposed the personal information of all 500px users, including names, usernames, email addresses, encrypted passwords, location, birth date, and gender.",web,hacked,2,https://petapixel.com/2019/02/13/500px-hacked-personal-data-stolen-from-all-14-8-million-users/
 8fit,20000000,2019,February ,"Part of the theft of 617 million online account details from 16 hacked websites, put up for sale on the dark web.",web,hacked,1,https://www.theregister.co.uk/2019/02/11/620_million_hacked_accounts_dark_web/
