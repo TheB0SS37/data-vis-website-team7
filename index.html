@@ -527,13 +527,15 @@
             )}; cursor: pointer;`
           );
 
+          const colorScale = d3.scaleSequential(d3.interpolateBlues);
+
         // Append the nodes.
         let node = svg
           .append("g")
           .selectAll("circle")
           .data(root.descendants().slice(1))
           .join("circle")
-          .attr("fill", (d) => (d.children ? color(d.depth) : "white"))
+          .attr("fill", (d) => (d.children ? color(d.depth) : colorScale(normalizeScale(d.data.value, 0, 1000000000, 0, 1))))
           .attr("pointer-events", (d) => (!d.children ? "none" : null))
           .on("mouseover", function () {
             d3.select(this).attr("stroke", "#000");
