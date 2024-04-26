@@ -248,9 +248,8 @@
       /////////////////////////////////////////////////////////////////////////////////////////
       //                                    Elision                                          //
       /////////////////////////////////////////////////////////////////////////////////////////
-      const updateElision = () => {
+      const updateElision = (data) => {
         // Chart dimensions
-        const data = treeMapData;
         const width = 1200;
         const marginTop = 10;
         const marginRight = 10;
@@ -509,8 +508,7 @@
       /////////////////////////////////////////////////////////////////////////////////////////
       //                                  Circle Packing                                     //
       /////////////////////////////////////////////////////////////////////////////////////////
-      const updateCirclePack = () => {
-        const data = treeMapData;
+      const updateCirclePack = (data) => {
         // Specify the chart’s dimensions.
         const width = 928;
         const height = width;
@@ -633,8 +631,8 @@
 
         circleContainer.append(svg.node());
       };
-      updateElision();
-      updateCirclePack();
+      updateElision(treeMapData);
+      updateCirclePack(treeMapData);
     </script>
   </body>
 </html>
