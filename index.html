@@ -501,7 +501,7 @@
         const color = d3
           .scaleLinear()
           .domain([0, 5])
-          .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+          .range(["#FFCB2E", "#FFFFFA"])
           .interpolate(d3.interpolateHcl);
 
         // Compute the layout.
@@ -527,7 +527,7 @@
             )}; cursor: pointer;`
           );
 
-          const colorScale = d3.scaleSequential(d3.interpolateBlues);
+          const colorScale = d3.scaleSequential(d3.interpolateOranges);
 
         // Append the nodes.
         let node = svg
@@ -535,7 +535,7 @@
           .selectAll("circle")
           .data(root.descendants().slice(1))
           .join("circle")
-          .attr("fill", (d) => (d.children ? color(d.depth) : colorScale(normalizeScale(d.data.value, 0, 1000000000, 0, 1))))
+          .attr("fill", (d) => (d.children ? color(d.depth) : colorScale(normalizeScale(d.data.value, 0, Math.max(...d.parent.children.map((row) => row.data.value)), 0, 1))))
           .attr("pointer-events", (d) => (!d.children ? "none" : null))
           .on("mouseover", function () {
             d3.select(this).attr("stroke", "#000");
