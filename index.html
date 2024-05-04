@@ -73,10 +73,56 @@
       <div class="display-3 p-3">Tableau Visualization</div>
     </div>
     <!-- Tableau Vis Embed -->
-    <div class="container d-flex flex-row justify-content-center">
-      <div class='tableauPlaceholder' id='viz1714701799345' style='position: relative'><noscript><a href='#'><img alt='Main Dash ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;MH&#47;MHN389JCC&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;MHN389JCC' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;MH&#47;MHN389JCC&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1714701799345');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1200px';vizElement.style.height='827px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1200px';vizElement.style.height='827px';} else { vizElement.style.width='100%';vizElement.style.height='2327px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+    <div class="container-fluid d-flex flex-row justify-content-center">
+      <div
+        class="tableauPlaceholder col-4"
+        id="viz1714701799345"
+        style="position: relative"
+      >
+        <noscript
+          ><a href="#"
+            ><img
+              alt="Main Dash "
+              src="https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;MH&#47;MHN389JCC&#47;1_rss.png"
+              style="border: none" /></a></noscript
+        ><object class="tableauViz" style="display: none">
+          <param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F" />
+          <param name="embed_code_version" value="3" />
+          <param name="path" value="shared&#47;MHN389JCC" />
+          <param name="toolbar" value="yes" />
+          <param
+            name="static_image"
+            value="https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;MH&#47;MHN389JCC&#47;1.png"
+          />
+          <param name="animate_transition" value="yes" />
+          <param name="display_static_image" value="yes" />
+          <param name="display_spinner" value="yes" />
+          <param name="display_overlay" value="yes" />
+          <param name="display_count" value="yes" />
+          <param name="language" value="en-US" />
+        </object>
+      </div>
+      <script type="text/javascript">
+        var divElement = document.getElementById("viz1714701799345");
+        var vizElement = divElement.getElementsByTagName("object")[0];
+        if (divElement.offsetWidth > 800) {
+          vizElement.style.width = "1200px";
+          vizElement.style.height = "827px";
+        } else if (divElement.offsetWidth > 500) {
+          vizElement.style.width = "1200px";
+          vizElement.style.height = "827px";
+        } else {
+          vizElement.style.width = "100%";
+          vizElement.style.height = "2327px";
+        }
+        var scriptElement = document.createElement("script");
+        scriptElement.src =
+          "https://public.tableau.com/javascripts/api/viz_v1.js";
+        vizElement.parentNode.insertBefore(scriptElement, vizElement);
+      </script>
+    </div>
     <!-- End Tableau vis embed -->
-    
+
     <!------------ JS  ------------>
     <script type="module">
       // D3 Vis /////////////////////////
@@ -233,6 +279,7 @@
       //                                    Elision                                          //
       /////////////////////////////////////////////////////////////////////////////////////////
       const updateElision = (data) => {
+        $("#container").find("svg").remove();
         // Chart dimensions
         const width = 1200;
         const marginTop = 20;
@@ -397,7 +444,13 @@
           nodeEnter
             .append("circle")
             .attr("r", (d) =>
-              normalizeScale(Math.sqrt(d.data.value), Math.sqrt(dataMin), Math.sqrt(dataMax), 80, 2.5)
+              normalizeScale(
+                Math.sqrt(d.data.value),
+                Math.sqrt(dataMin),
+                Math.sqrt(dataMax),
+                80,
+                2.5
+              )
             )
             .attr(
               "fill",
@@ -493,6 +546,7 @@
       //                                  Circle Packing                                     //
       /////////////////////////////////////////////////////////////////////////////////////////
       const updateCirclePack = (data) => {
+        $("#circleContainer").find("svg").remove();
         // Specify the chart’s dimensions.
         const width = 928;
         const height = width;
@@ -527,7 +581,7 @@
             )}; cursor: pointer;`
           );
 
-          const colorScale = d3.scaleSequential(d3.interpolateOranges);
+        const colorScale = d3.scaleSequential(d3.interpolateOranges);
 
         // Append the nodes.
         let node = svg
@@ -535,7 +589,19 @@
           .selectAll("circle")
           .data(root.descendants().slice(1))
           .join("circle")
-          .attr("fill", (d) => (d.children ? color(d.depth) : colorScale(normalizeScale(d.data.value, 0, Math.max(...d.parent.children.map((row) => row.data.value)), 0, 1))))
+          .attr("fill", (d) =>
+            d.children
+              ? color(d.depth)
+              : colorScale(
+                  normalizeScale(
+                    d.data.value,
+                    0,
+                    Math.max(...d.parent.children.map((row) => row.data.value)),
+                    0,
+                    1
+                  )
+                )
+          )
           .attr("pointer-events", (d) => (!d.children ? "none" : null))
           .on("mouseover", function () {
             d3.select(this).attr("stroke", "#000");
@@ -617,9 +683,13 @@
 
         circleContainer.append(svg.node());
       };
+
       const treeMapData = treeYearSectorOrg(myData);
-      updateElision(treeMapData);
-      updateCirclePack(treeSectorOrg(myData));
+      // JQuery stuff
+      $(document).ready(function () {
+        updateElision(treeMapData);
+        updateCirclePack(treeSectorOrg(myData));
+      });
     </script>
   </body>
 </html>
