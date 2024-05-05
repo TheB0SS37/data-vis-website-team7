@@ -45,13 +45,53 @@
         </div>
       </div>
     </nav>
+    <!------------ Intro / Summary ------------>
+    <div class="d-flex flex-column text-center">
+      <p class="display-1">Welcome to You've Been Hacked!</p>
+      <p class="lead">
+        A platform designed to help security researchers, IT administrators, and
+        policymakers explore and analyze data breaches through powerful
+        interactive visualizations.
+      </p>
+      <hr class="align-self-center hr hr-blurry w-75" />
+    </div>
     <!------------ CONTENT ------------>
-
-    <div
-      id="hierarchy-vis-title"
-      class="container d-flex flex-row justify-content-center"
-    >
-      <div class="display-3 p-3">Elision Visualization</div>
+    <div id="hierarchy-vis-title" class="container flex-column">
+      <div class="display-3 p-3 text-center">Elision Visualization</div>
+    </div>
+    <div class="px-4">
+      <dl class="row">
+        <dt class="col-sm-3">Loading the Data</dt>
+        <dd class="col-sm-9">
+          Data is pre-loaded into the visualization; simply visit the page to
+          start interacting.
+        </dd>
+        <dt class="col-sm-3">Setting Parameters</dt>
+        <dd class="col-sm-9">
+          No initial parameter setting is required; all nodes are collapsed to
+          show only the timeline by default.
+        </dd>
+        <dt class="col-sm-3">Interacting with the System</dt>
+        <dd class="col-sm-9">
+          <p>
+            Click on a year node to expand it and see detailed breaches for that
+            year.
+          </p>
+          <p>
+            Click on a sector within a year to view specific companies and
+            further details on breaches.
+          </p>
+          <p>
+            Use mouse wheel or pinch-to-zoom on mobile to zoom in and out of
+            specific areas of the chart.
+          </p>
+        </dd>
+        <dt class="col-sm-3">Resetting the View</dt>
+        <dd class="col-sm-9">
+          Double-click on the background or use the 'Reset' button to return to
+          the initial overview.
+        </dd>
+      </dl>
     </div>
     <!--Elision container-->
     <div id="container" class="d-flex flex-row justify-content-center"></div>
@@ -62,6 +102,33 @@
       <div class="display-3 p-3">Circle Visualization</div>
     </div>
     <!--Circle container-->
+    <div class="px-4">
+      <dl class="row">
+        <dt class="col-sm-3">Loading the Data</dt>
+        <dd class="col-sm-9">
+          Automatically loads with the visualization; just open the
+          visualization page.
+        </dd>
+        <dt class="col-sm-3">Setting Parameters</dt>
+        <dd class="col-sm-9">
+          No setup needed; the visualization starts with an overview of all
+          sectors.
+        </dd>
+        <dt class="col-sm-3">Interacting with the System</dt>
+        <dd class="col-sm-9">
+          <p>Hover over any sector to see a tooltip with summary statistics.</p>
+          <p>
+            Click on a sector to zoom into detailed views of companies affected
+            by breaches within that sector.
+          </p>
+        </dd>
+        <dt class="col-sm-3">Resetting the View</dt>
+        <dd class="col-sm-9">
+          Click on the visualization to reset the zoom level and view all
+          sectors simultaneously.
+        </dd>
+      </dl>
+    </div>
     <div class="d-flex justify-content-center">
       <select id="circleFilter" class="form-select">
         <option value="sector">Filter by Sector</option>
@@ -78,6 +145,36 @@
       class="container d-flex flex-row justify-content-center"
     >
       <div class="display-3 p-3">Tableau Visualization</div>
+    </div>
+    <div class="px-4">
+      <dl class="row">
+        <dt class="col-sm-3">Loading the Data</dt>
+        <dd class="col-sm-9">
+          The dashboard loads automatically with embedded data when accessed.
+        </dd>
+        <dt class="col-sm-3">Setting Parameters</dt>
+        <dd class="col-sm-9">No setup needed.</dd>
+        <dt class="col-sm-3">Interacting with the System</dt>
+        <dd class="col-sm-9">
+          <p>
+            Click on any bar or sector in the charts to filter other sections of
+            the dashboard accordingly.
+          </p>
+          <p>
+            Hover over chart elements to display tooltips with detailed
+            information.
+          </p>
+          <p>
+            Use the 'Explore details' links to access deeper analytics on each
+            chart.
+          </p>
+        </dd>
+        <dt class="col-sm-3">Resetting the View</dt>
+        <dd class="col-sm-9">
+          To clear all selections and start over, click on the 'Reset' link
+          usually found at the bottom of the dashboard
+        </dd>
+      </dl>
     </div>
     <!-- Tableau Vis Embed -->
     <div class="container-fluid d-flex flex-row justify-content-center">
