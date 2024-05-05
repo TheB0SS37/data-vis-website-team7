@@ -15,7 +15,7 @@
       type="image/x-icon"
       href="./assets/computer-hacked-icon-vector.jpg?"
     />
-    <link href="styles.css" rel="stylesheet" />
+    <link href="styles/styles.css" rel="stylesheet" />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -62,6 +62,13 @@
       <div class="display-3 p-3">Circle Visualization</div>
     </div>
     <!--Circle container-->
+    <div class="d-flex justify-content-center">
+      <select id="circleFilter" class="form-select">
+        <option value="sector">Filter by Sector</option>
+        <option value="method">Filter by Method of Hack</option>
+        <option value="month">Filter by Month</option>
+      </select>
+    </div>
     <div
       id="circleContainer"
       class="d-flex flex-row justify-content-center"
@@ -242,30 +249,30 @@
         return treeMapData;
       };
 
-      const treeSectorOrg = (data) => {
+      const treePropOrg = (data, prop) => {
         // Create root node
         const treeMapData = makeNode(
           `${formatter.format(sumOfRecordsLost)} Total Records lost`
         );
 
         // Bin values by the year, the record sum in root
-        const binnedBySector = R.groupBy(R.prop("sector"), data);
+        const binnedByProp = R.groupBy(R.prop(prop), data);
         treeMapData.value = sumOfRecordsLost;
 
         // Create rest of tree
-        for (const [sectorKey, value] of Object.entries(binnedBySector)) {
+        for (const [propKey, value] of Object.entries(binnedByProp)) {
           // Make node for each year, then record sum of the rest of the values
-          const sectorNode = makeNode(sectorKey);
-          sectorNode.value = sumTheRecords(value);
+          const propNode = makeNode(propKey);
+          propNode.value = sumTheRecords(value);
 
-          // Grab individual organisations, make a node, then add them to the sector's children
+          // Grab individual organisations, make a node, then add them to the props's children
           value.map((org) => {
             const orgNode = makeNode(org.organisation);
             orgNode.value = org["records lost"];
             orgNode.story = org["story"];
-            sectorNode.children.push(orgNode);
+            propNode.children.push(orgNode);
           });
-          treeMapData.children.push(sectorNode);
+          treeMapData.children.push(propNode);
         }
 
         // Add year node to root children
@@ -306,7 +313,7 @@
           .attr("viewBox", [-marginLeft, -marginTop, width, dx])
           .attr(
             "style",
-            "max-width: 100%; height: auto; font: 10px sans-serif; user-select: none; border: 2px solid black;"
+            "max-width: 100%; height: auto; font: 16px sans-serif; user-select: none; border: 2px solid black;"
           );
         svg.style("background-color", "#d8ecf3");
 
@@ -688,7 +695,11 @@
       // JQuery stuff
       $(document).ready(function () {
         updateElision(treeMapData);
-        updateCirclePack(treeSectorOrg(myData));
+        updateCirclePack(treePropOrg(myData, $("#circleFilter").val()));
+
+        $("#circleFilter").change(function (event) {
+          updateCirclePack(treePropOrg(myData, event.target.value));
+        });
       });
     </script>
   </body>
