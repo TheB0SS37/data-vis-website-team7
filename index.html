@@ -736,7 +736,7 @@
         svg.on("click", (event) => zoom(event, root));
         let focus = root;
         let view;
-        zoomTo([focus.x, focus.y, focus.r * 2]);
+        zoomTo([focus.x, focus.y, focus.r * 2 + 100]);
 
         function zoomTo(v) {
           const k = width / v[2];
@@ -766,7 +766,7 @@
               const i = d3.interpolateZoom(view, [
                 focus.x,
                 focus.y,
-                focus.r * 2,
+                focus.r * 2 + 100,
               ]);
               return (t) => zoomTo(i(t));
             });
