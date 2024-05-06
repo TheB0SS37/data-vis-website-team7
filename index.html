@@ -791,6 +791,8 @@
                   (nd.parent === focus &&
                     Math.sqrt(nd.r) / Math.sqrt(nd.parent.r) > 0.4)
                 ? 1
+                : d.parent === root
+                ? 1
                 : 0
             );
           })
