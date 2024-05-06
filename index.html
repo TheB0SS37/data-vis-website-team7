@@ -36,7 +36,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="#circle-vis-title">Circle</a>
+              <a class="nav-link text-white" href="#circle-vis-title">Bubble</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="#tableau-vis-title"
@@ -61,37 +61,32 @@
     <div id="elision-vis-title" class="container flex-column">
       <div class="display-3 p-3 text-center">Elision Visualization</div>
     </div>
-    <div class="px-4">
-      <dl class="row">
-        <dt class="col-sm-3">Loading the Data</dt>
+    <div>
+      <p class="text-center">
+        The Elision Chart lets you explore the timeline of data breaches. It
+        starts with a simple view of each year. You can click on these to see
+        more about the breaches in different sectors and organizations.
+      </p>
+      <dl class="row detail">
+        <h4>This tool helps you perform...</h4>
+        <dt class="col-sm-3">Trend Identification:</dt>
+        <dd class="col-sm-9">Find the years with the most breaches.</dd>
+        <dt class="col-sm-3">Detailed Analysis:</dt>
         <dd class="col-sm-9">
-          Data is pre-loaded into the visualization; simply visit the page to
-          start interacting.
+          Look closer into specific sectors and organizations.
         </dd>
-        <dt class="col-sm-3">Setting Parameters</dt>
+        <dt class="col-sm-3">Sector-Specific Exploration:</dt>
         <dd class="col-sm-9">
-          No initial parameter setting is required; all nodes are collapsed to
-          show only the timeline by default.
+          Check out which parts of each sector were affected.
         </dd>
-        <dt class="col-sm-3">Interacting with the System</dt>
+        <dt class="col-sm-3">On-Demand Information:</dt>
         <dd class="col-sm-9">
-          <p>
-            Click on a year node to expand it and see detailed breaches for that
-            year.
-          </p>
-          <p>
-            Click on a sector within a year to view specific companies and
-            further details on breaches.
-          </p>
-          <p>
-            Use mouse wheel or pinch-to-zoom on mobile to zoom in and out of
-            specific areas of the chart.
-          </p>
+          Get detailed information about specific breaches.
         </dd>
-        <dt class="col-sm-3">Resetting the View</dt>
+        <dt class="col-sm-3">Navigational Flexibility:</dt>
         <dd class="col-sm-9">
-          Double-click on the background or use the 'Reset' button to return to
-          the initial overview.
+          Choose how much detail you want to see, making it easier to manage and
+          understand the information.
         </dd>
       </dl>
     </div>
@@ -112,30 +107,27 @@
       <div class="display-3 p-3">Bubble Cluster Chart</div>
     </div>
     <!--Circle container-->
-    <div class="px-4">
-      <dl class="row">
-        <dt class="col-sm-3">Loading the Data</dt>
+    <div>
+      <p class="text-center">
+        The Circle Visualization shows bright, colored circles that vary in size
+        and color depth based on how severe the breaches were.
+      </p>
+      <dl class="row detail">
+        <h4>This helps you with...</h4>
+        <dt class="col-sm-3">Comparative Analysis:</dt>
+        <dd class="col-sm-9">See which sectors are most affected.</dd>
+        <dt class="col-sm-3">Focused Inquiry:</dt>
         <dd class="col-sm-9">
-          Automatically loads with the visualization; just open the
-          visualization page.
+          Zoom into specific sectors to get details about companies.
         </dd>
-        <dt class="col-sm-3">Setting Parameters</dt>
+        <dt class="col-sm-3">Interactive Exploration:</dt>
         <dd class="col-sm-9">
-          No setup needed; the visualization starts with an overview of all
-          sectors.
+          Interact with the visualization to learn more about breaches in
+          different sectors.
         </dd>
-        <dt class="col-sm-3">Interacting with the System</dt>
+        <dt class="col-sm-3">Design Insight:</dt>
         <dd class="col-sm-9">
-          <p>Hover over any sector to see a tooltip with summary statistics.</p>
-          <p>
-            Click on a sector to zoom into detailed views of companies affected
-            by breaches within that sector.
-          </p>
-        </dd>
-        <dt class="col-sm-3">Resetting the View</dt>
-        <dd class="col-sm-9">
-          Click on the visualization to reset the zoom level and view all
-          sectors simultaneously.
+          Address challenges in showing a lot of data clearly.
         </dd>
       </dl>
     </div>
@@ -171,33 +163,24 @@
     >
       <div class="display-3 p-3">Tableau Visualization</div>
     </div>
-    <div class="px-4">
-      <dl class="row">
-        <dt class="col-sm-3">Loading the Data</dt>
+    <div>
+      <h4 class="text-center">
+        The Tableau dashboard offers a detailed look at data breaches with...
+      </h4>
+      <dl class="row detail">
+        <dt class="col-sm-3">Detailed Data Panels:</dt>
         <dd class="col-sm-9">
-          The dashboard loads automatically with embedded data when accessed.
+          Displaying how breaches happened in each sector, top affected
+          organization, respective records lost, and trends over the years.
         </dd>
-        <dt class="col-sm-3">Setting Parameters</dt>
-        <dd class="col-sm-9">No setup needed.</dd>
-        <dt class="col-sm-3">Interacting with the System</dt>
+        <dt class="col-sm-3">Interactive Charts:</dt>
         <dd class="col-sm-9">
-          <p>
-            Click on any bar or sector in the charts to filter other sections of
-            the dashboard accordingly.
-          </p>
-          <p>
-            Hover over chart elements to display tooltips with detailed
-            information.
-          </p>
-          <p>
-            Use the 'Explore details' links to access deeper analytics on each
-            chart.
-          </p>
+          Allowing you to change and focus the data to find what you need.
         </dd>
-        <dt class="col-sm-3">Resetting the View</dt>
+        <dt class="col-sm-3">Broad Overview and Deep Dives:</dt>
         <dd class="col-sm-9">
-          To clear all selections and start over, click on the 'Reset' link
-          usually found at the bottom of the dashboard
+          Supporting both broad and detailed analysis, from overall trends to
+          specific details of incidents.
         </dd>
       </dl>
     </div>
@@ -251,6 +234,19 @@
       </script>
     </div>
     <!-- End Tableau vis embed -->
+    <div class="display-3 p-3 text-center">Conclusion</div>
+    <div class="text-center detail">
+      <p>
+        This platform integrates stand-alone and complementary visualizations to
+        provide a comprehensive view of data breaches. Users can interactively
+        navigate from general overviews to detailed specifics, enabling thorough
+        analyses and comparisons. "You Have Been Hacked!" combines powerful
+        visualization tools to enhance understanding and facilitate informed,
+        data-driven decisions for better cybersecurity. It simplifies complex
+        data, making it accessible and actionable for anyone committed to
+        improving security measures.
+      </p>
+    </div>
 
     <!------------ JS  ------------>
     <script type="module">

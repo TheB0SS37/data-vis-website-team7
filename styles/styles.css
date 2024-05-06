@@ -47,3 +47,8 @@
   position: relative;
   top: 7px;
 }
+
+.detail {
+  max-width: 900px;
+  margin: auto;
+}
