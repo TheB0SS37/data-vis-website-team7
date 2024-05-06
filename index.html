@@ -586,7 +586,7 @@
           nodeEnter
             .append("text")
             .attr("dy", "0.31em")
-            .attr("x", (d) => (d.depth == 0 ? 31 : d._children ? -6 : 6))
+            .attr("x", (d) => (d.depth == 0 ? 80 : d._children ? -24 : 6))
             .attr("text-anchor", (d) => (d._children ? "end" : "start"))
             .text((d) =>
               d._children
