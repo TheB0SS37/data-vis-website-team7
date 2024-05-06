@@ -142,6 +142,21 @@
       id="circleContainer"
       class="d-flex flex-row justify-content-center"
     ></div>
+    <div id="circleLegend" class="d-flex text-center m-auto">
+      <div class="card w-100" style="background-color: #83a7fb">
+        <p class="p-0 m-0">Number of Records Lost</p>
+        <div class="d-flex justify-content-between px-3">
+          <p id="circleLegendMin" class="legendText">Min</p>
+          <div class="d-flex align-items-center">
+            <div id="legendCircle1"></div>
+            <div id="legendCircle2"></div>
+            <div id="legendCircle3"></div>
+            <div id="legendCircle4"></div>
+          </div>
+          <p id="circleLegendMax" class="legendText">Max</p>
+        </div>
+      </div>
+    </div>
     <div
       id="tableau-vis-title"
       class="container d-flex flex-row justify-content-center"
@@ -730,6 +745,15 @@
               event.stopPropagation();
               return;
             }
+
+            const nodeMin = Math.min(
+              ...d.children.map((row) => row.data.value)
+            );
+            const nodeMax = Math.max(
+              ...d.children.map((row) => row.data.value)
+            );
+            $("#circleLegendMin").text(formatter.format(nodeMin));
+            $("#circleLegendMax").text(formatter.format(nodeMax));
             // Update the focus to the clicked node
             clickedNode = d;
             // Update pointer-events for nodes
@@ -753,8 +777,11 @@
           .style("display", (d) => (d.parent === root ? "inline" : "none"))
           .text((d) => d.data.name);
 
-        // Create the zoom behavior and zoom immediately in to the initial focus node.
+        // Create the zoom behavior and zoom immediately in to the initial focus node
         svg.on("click", (event) => {
+          $("#circleLegendMin").text("Min");
+          $("#circleLegendMax").text("Max");
+
           // Only want root nodes to be clickable again
           node.attr("pointer-events", (d) =>
             d.parent === root ? null : "none"
@@ -827,6 +854,8 @@
         updateCirclePack(treePropOrg(myData, $("#circleFilter").val()));
 
         $("#circleFilter").change(function (event) {
+          $("#circleLegendMin").text("Min");
+          $("#circleLegendMax").text("Max");
           updateCirclePack(treePropOrg(myData, event.target.value));
         });
       });

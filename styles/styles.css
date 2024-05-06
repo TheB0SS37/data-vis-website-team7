@@ -1,3 +1,45 @@
 #circleFilter {
   max-width: 928px;
 }
+
+#circleLegend {
+  width: 205px;
+  justify-self: center;
+}
+
+#legendCircle1 {
+  width: 7px;
+  height: 7px;
+  background-color: rgb(127, 39, 4);
+  border-radius: 50%;
+  margin: 0px 4px;
+}
+
+#legendCircle2 {
+  width: 15px;
+  height: 15px;
+  background-color: rgb(167, 54, 3);
+  border-radius: 50%;
+  margin: 0px 4px;
+}
+
+#legendCircle3 {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(221, 82, 7);
+  border-radius: 50%;
+  margin: 0px 4px;
+}
+
+#legendCircle4 {
+  width: 30px;
+  height: 30px;
+  background-color: rgb(255, 245, 235);
+  border-radius: 50%;
+  margin: 0px 4px;
+}
+
+.legendText {
+  position: relative;
+  top: 7px;
+}
