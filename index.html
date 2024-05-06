@@ -96,12 +96,18 @@
       </dl>
     </div>
     <!--Elision container-->
-    <div id="container" class="d-flex flex-row justify-content-center"></div>
+    <div class="d-flex flex-column">
+      <select id="elisionFilter" class="form-select m-auto">
+        <option value="sector">Filter by Year -> Sector</option>
+        <option value="method">Filter by Year -> Method of Hack</option>
+      </select>
+      <div id="container" class="d-flex flex-row justify-content-center"></div>
+    </div>
     <div
       id="circle-vis-title"
       class="container d-flex flex-row justify-content-center"
     >
-      <div class="display-3 p-3">Circle Visualization</div>
+      <div class="display-3 p-3">Bubble Cluster Chart</div>
     </div>
     <!--Circle container-->
     <div class="px-4">
@@ -355,6 +361,48 @@
 
             // Add sector to yearNode children
             newNode.children.push(sectorNode);
+          }
+
+          // Add year node to root children
+          treeMapData.children.push(newNode);
+        }
+        return treeMapData;
+      };
+
+      const treeYearMethodOrg = (data) => {
+        // Create root node
+        const treeMapData = makeNode(
+          `${formatter.format(sumOfRecordsLost)} Total Records lost`
+        );
+
+        // Bin values by the year, the record sum in root
+        const binnedByYear = R.groupBy(R.prop("year"), data);
+        treeMapData.value = sumOfRecordsLost;
+
+        // Create rest of tree
+        for (const [key, value] of Object.entries(binnedByYear)) {
+          // Make node for each year, then record sum of the rest of the values
+          const newNode = makeNode(key);
+          newNode.value = sumTheRecords(value);
+
+          // Bin children rows of year by method
+          const binnedByMethod = R.groupBy(R.prop("method"), value);
+
+          for (const [methodKey, value] of Object.entries(binnedByMethod)) {
+            // Create sector node and sum its children
+            const methodNode = makeNode(methodKey);
+            methodNode.value = sumTheRecords(value);
+
+            // Grab individual organisations, make a node, then add them to the sector's children
+            value.map((org) => {
+              const orgNode = makeNode(org.organisation);
+              orgNode.value = org["records lost"];
+              orgNode.story = org["story"];
+              methodNode.children.push(orgNode);
+            });
+
+            // Add sector to yearNode children
+            newNode.children.push(methodNode);
           }
 
           // Add year node to root children
@@ -852,6 +900,17 @@
       $(document).ready(function () {
         updateElision(treeMapData);
         updateCirclePack(treePropOrg(myData, $("#circleFilter").val()));
+
+        $("#elisionFilter").change(function (event) {
+          switch (event.target.value) {
+            case "sector":
+              updateElision(treeMapData);
+              break;
+            case "method":
+              updateElision(treeYearMethodOrg(myData));
+              break;
+          }
+        });
 
         $("#circleFilter").change(function (event) {
           $("#circleLegendMin").text("Min");
