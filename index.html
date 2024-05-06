@@ -710,6 +710,16 @@
           .attr("pointer-events", (d) => (!d.children ? "none" : null))
           .on("mouseover", function (event, d) {
             d3.select(this).attr("stroke", "#000");
+            label.style("fill-opacity", (nd) =>
+              nd.data.name ===
+              d3.select(this)["_groups"][0][0]["__data__"].data.name
+                ? 1
+                : (nd.parent === root && clickedNode !== nd) ||
+                  (nd.parent === focus &&
+                    Math.sqrt(nd.r) / Math.sqrt(nd.parent.r) > 0.4)
+                ? 1
+                : 0
+            );
           })
           .on("mouseout", function () {
             d3.select(this).attr("stroke", null);
