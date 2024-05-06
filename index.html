@@ -686,7 +686,8 @@
           );
 
         const colorScale = d3.scaleSequential(d3.interpolateOranges);
-
+        let focus = root;
+        let clickedNode = null;
         // Append the nodes.
         let node = svg
           .append("g")
@@ -713,11 +714,21 @@
           .on("mouseout", function () {
             d3.select(this).attr("stroke", null);
           })
-          .on(
-            "click",
-            (event, d) =>
-              focus !== d && (zoom(event, d), event.stopPropagation())
-          );
+          .on("click", (event, d) => {
+            if (!d.children) {
+              // Do not zoom into organization node
+              event.stopPropagation();
+              return;
+            }
+            // Update the focus to the clicked node
+            clickedNode = d;
+            // Update pointer-events for nodes
+            node.attr("pointer-events", (nd) => {
+              return nd.parent === clickedNode ? "all" : "none";
+            });
+
+            focus !== d && (zoom(event, d), event.stopPropagation());
+          });
 
         // Append the text labels.
         const label = svg
@@ -733,8 +744,13 @@
           .text((d) => d.data.name);
 
         // Create the zoom behavior and zoom immediately in to the initial focus node.
-        svg.on("click", (event) => zoom(event, root));
-        let focus = root;
+        svg.on("click", (event) => {
+          // Only want root nodes to be clickable again
+          node.attr("pointer-events", (d) =>
+            d.parent === root ? null : "none"
+          );
+          zoom(event, root);
+        });
         let view;
         zoomTo([focus.x, focus.y, focus.r * 2 + 100]);
 
