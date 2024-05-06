@@ -98,8 +98,10 @@
     <!--Elision container-->
     <div class="d-flex flex-column">
       <select id="elisionFilter" class="form-select m-auto">
-        <option value="sector">Filter by Year -> Sector</option>
-        <option value="method">Filter by Year -> Method of Hack</option>
+        <option value="sector">Filter by Year -> Sector -> Organization</option>
+        <option value="method">
+          Filter by Year -> Method of Hack -> Organization
+        </option>
       </select>
       <div id="container" class="d-flex flex-row justify-content-center"></div>
     </div>
@@ -139,9 +141,9 @@
     </div>
     <div class="d-flex justify-content-center">
       <select id="circleFilter" class="form-select">
-        <option value="sector">Filter by Sector</option>
-        <option value="method">Filter by Method of Hack</option>
-        <option value="month">Filter by Month</option>
+        <option value="sector">Filter by Sector -> Organization</option>
+        <option value="method">Filter by Method of Hack -> Organization</option>
+        <option value="month">Filter by Month -> Organization</option>
       </select>
     </div>
     <div
@@ -310,7 +312,7 @@
         return row;
       });
 
-      // Create a unique color pallette for the sectors
+      // Create a unique color pallette for the sectors / methods
       const sectorSet = new Set();
       myData.map((row) => {
         sectorSet.add(row["sector"]);
@@ -319,6 +321,16 @@
       const sectorColorPallette = {};
       [...sectorSet].map((sec, i) => {
         sectorColorPallette[sec] = selectColor(i * 2);
+      });
+
+      const methodSet = new Set();
+      myData.map((row) => {
+        methodSet.add(row["method"]);
+      });
+
+      const methodColorPallette = {};
+      [...methodSet].map((method, i) => {
+        methodColorPallette[method] = selectColor(i * 2);
       });
 
       const formatter = new Intl.NumberFormat("en-US", { notation: "compact" });
@@ -626,7 +638,9 @@
               (d) =>
                 sectorColorPallette[d.data.name] ||
                 sectorColorPallette[d?.parent?.data?.name] ||
-                "#555"
+                methodColorPallette[d.data.name] ||
+                methodColorPallette[d?.parent?.data?.name] ||
+                "#FEEFE7"
             )
             .style("stroke", "black")
             .style("stroke-width", "1px");
