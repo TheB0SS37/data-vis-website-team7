@@ -708,7 +708,7 @@
                 )
           )
           .attr("pointer-events", (d) => (!d.children ? "none" : null))
-          .on("mouseover", function () {
+          .on("mouseover", function (event, d) {
             d3.select(this).attr("stroke", "#000");
           })
           .on("mouseout", function () {
@@ -792,7 +792,13 @@
               return d.parent === focus || this.style.display === "inline";
             })
             .transition(transition)
-            .style("fill-opacity", (d) => (d.parent === focus ? 1 : 0))
+            .style("fill-opacity", (d) =>
+              (d.parent === root && clickedNode !== d) ||
+              (d.parent === focus &&
+                Math.sqrt(d.r) / Math.sqrt(d.parent.r) > 0.4)
+                ? 1
+                : 0
+            )
             .on("start", function (d) {
               if (d.parent === focus) this.style.display = "inline";
             })
